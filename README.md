@@ -1,0 +1,2 @@
+# LibJS
+Javascript helper library
