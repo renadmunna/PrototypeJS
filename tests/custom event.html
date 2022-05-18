@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<div id=""></div>
+<script>
+
+EventTarget.prototype.on = EventTarget.prototype.addEventListener;
+EventTarget.prototype.trigger = EventTarget.prototype.dispatchEvent;
+
+
+window.on('custom',function(e){
+	console.log(e.detail.name)
+});
+window.on('custom',function(e){
+	console.log('renad')
+});
+var custom = new CustomEvent('custom', {
+  detail: {
+    name: 'cat'
+  }
+});
+window.custom && window.trigger(custom);
+
+
+var dom=document.querySelector.bind(document);
+HTMLElement.prototype.attr=function(){
+return arguments.length==1 && this.getAttribute(arguments[0])
+	|| arguments.length==2 && this.setAttribute(arguments[0],arguments[1]);
+};
+var a=function(){
+	return 
+};
+if(dom('div').attr('id'))console.log('ok');
+// console.log(dom('div').attr('id')==true)
+</script>
+
+</body>
+</html>

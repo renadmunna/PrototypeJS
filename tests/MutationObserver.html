@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MutationObserver</title>
+</head>
+<body>
+<div class="test" db name="score" value=123 >dd</div>
+<div class="test" db name="coin" value=1000 >dd</div>
+<script></script>
+<script>
+DomDB = new MutationObserver(function(mutations,observer){
+	mutations.forEach(function(mutation){
+		if(mutation.type==='attributes'){
+			// console.log(mutation);
+			console.log(mutation.target, mutation.attributeName, mutation.oldValue, mutation.target.getAttribute(mutation.attributeName));
+		}
+	});
+});
+// DomDB.observe(document.body,{attributes:true,attributeOldValue:true,subtree:true});
+DomDB.observe(document.body,{attributes:true,subtree:true});
+
+setTimeout(function(){
+	document.querySelector('.test').setAttribute('name','db');
+	document.querySelector('.test').setAttribute('name','db123');
+	document.querySelector('.test').setAttribute('name','db1545423');
+	document.querySelector('.test').setAttribute('value','db1545423');
+},2000);
+
+</script>	
+</body>
+</html>

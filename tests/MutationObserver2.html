@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title>
+<script>
+
+</script>
+	<script src="../dist/lib.js"></script>
+</head>
+<body>
+	<div class="box">
+		<div class="item"><span>dd</span></div>
+	</div>
+<script>
+	HTMLElement.prototype.watch=function(config){
+		new MutationObserver(function(mutations,observer){
+			mutations.forEach(function(mutation){
+				if(mutation.type==='attributes'){
+					// console.log(mutation);
+					console.log(mutation.target, mutation.attributeName, mutation.oldValue, mutation.target.getAttribute(mutation.attributeName));
+				}
+			});
+		})
+		// .observe(this,{attributes:true,subtree:true})
+		.observe(this,config);
+	};
+	// HTMLElement.prototype._innerHTML=HTMLElement.prototype.innerHTML;
+	// HTMLElement.prototype._innerHTML=HTMLElement.prototype.innerHTML.bind(HTMLElement);
+	// HTMLElement.prototype.innerHTML=function(){
+
+	// };
+	// HTMLElement.prototype.atr=HTMLElement.prototype.attributes;
+	// Object.defineProperty(HTMLElement.prototype,'atr',{
+	// 	get(){return this.attributes},
+	// 	set(val){this.attributes=val}
+	// });
+	dom('.box').watch({attributes:true,subtree:true});
+	dom('.box').on('change',function(e){
+		console.log(e.detail);
+	});
+	dom('.box').on('attrChange',function(e){
+		console.log(e.detail);
+	});
+	dom('.box').attr('test','renad');
+	dom('.box').attr('test','renad1234');
+	dom('.box').attr('munna','renad4');
+	dom('.box').classList.add('renad');
+
+</script>
+</body>
+</html>

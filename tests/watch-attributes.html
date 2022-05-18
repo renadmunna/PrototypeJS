@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title>
+<script>
+
+</script>
+	<script src="../dist/lib.js"></script>
+</head>
+<body>
+	<div class="box">
+		<div class="item"><span>dd</span></div>
+	</div>
+<script>
+	dom('.box').on('change',function(e){
+		console.log(e.detail);
+	});
+	dom('.box').on('attrChange',function(e){
+		console.log(e.detail);
+	});
+	dom('.box').attr('test','renad');
+	dom('.box').attr('test','renad1234');
+	dom('.box').attr('munna','renad4');
+	dom('.box').classList.add('renad');
+
+</script>
+</body>
+</html>

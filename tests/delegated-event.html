@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" href="data:" type="image/svg+xml">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title>
+	<script src="../dist/lib.js"></script>
+</head>
+<body>
+	<div class="box">
+		<div class="item"><span>dd</span></div>
+	</div>
+<script>
+HTMLElement.prototype.onChild=function(event,child,func){
+	// console.log(event,child,func,this.on);
+	this.delegate={'child':child,'func':func}
+	this.on(event,function(e){
+		var child=e.target.closest(this.delegate.child);
+		console.log(child);
+		if(child){this.delegate.func(e)}
+		// console.log(this.delegate,e.target.closest(this.delegate.child));
+	})
+};
+dom('.box').onChild('click','.item',function(e){
+	console.log(e)
+});
+dom('.box').innerHTML+=`
+		<div class="item"><span>dd</span></div>
+		<div class="item"><span>dd</span></div>
+		<div class="item"><span>dd</span></div>
+		<div class="item"><span>dd</span></div>
+		<div class="item"><span>dd<div class="item">wrong</div></span></div>
+		<div class="item"><span>dd<div class="item">wrong</div></span></div>
+		<div class="item"><span>dd<div class="item">wrong</div></span></div>
+		<div class="item1"><span>dd</span></div>
+		<div class="item1"><span>dd</span></div>
+`;
+</script>
+</body>
+</html>

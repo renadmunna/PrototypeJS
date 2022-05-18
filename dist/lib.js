@@ -6,6 +6,14 @@ HTMLElement.prototype.doms=HTMLElement.prototype.querySelectorAll;
 EventTarget.prototype.on = EventTarget.prototype.addEventListener;
 EventTarget.prototype.trigger = EventTarget.prototype.dispatchEvent;
 HTMLElement.prototype.hasAttr=HTMLElement.prototype.hasAttribute;
+HTMLElement.prototype._setAttribute=HTMLElement.prototype.setAttribute;
+HTMLElement.prototype.setAttribute=function(name,value){
+	var oldValue=this.getAttribute(name);
+	this._setAttribute(name,value);
+	this.dispatchEvent(new CustomEvent('attrChange',{detail:{
+		name:name,value:value,oldValue:oldValue
+	}}));
+};
 HTMLElement.prototype.attr=function(){
 return arguments.length==1 && this.getAttribute(arguments[0])
 	|| arguments.length==2 && this.setAttribute(arguments[0],arguments[1]);
