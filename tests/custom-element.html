@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title>
+	<script src="../dist/lib.js"></script>
+</head>
+<body>
+<script>
+
+// The button that says "hello" on click
+class HelloButton extends HTMLButtonElement {
+  constructor() {
+    super();
+    this.addEventListener('click', () => alert("Hello!"));
+  }
+}
+HelloButton.prototype.connectedCallback=function(){this.innerHTML='Ali Mohsin';};
+customElements.define('hello-button', HelloButton, {extends: 'button'});
+
+// Object.defineProperty(HelloElement.prototype, 'propertyName', {
+// 	get:function(){return 'propertyValue';},
+// 	set:function(val){}
+// });
+// HelloElement.prototype.methodName=function(){};
+// customElements.define('hello-element', HelloElement);
+
+function customElementDef(x){
+	var base=x.extends?x.extends[0]:HTMLElement;
+	class xElement extends base{constructor(){
+		super();
+		if(x.init){this.init=x.init;this.init()}
+	}}
+	xElement.observedAttributes=x.attr||null;
+	xElement.prototype.attributeChangedCallback=x.attrChange||null;
+	xElement.prototype.connectedCallback=x.onCreate||null;
+	xElement.prototype.disconnectedCallback=x.onRemove||null;
+	// Object.defineProperty(xElement.prototype, 'propertyName', {
+	// 	get:function(){return 'propertyValue';},
+	// 	set:function(val){}
+	// });
+	// xElement.prototype.methodName=function(){};
+	xElement.prototype.munna="ali";
+	Object.defineProperty(xElement.prototype, 'renad', {
+		get:function(){return this.munna},
+		set:function(val){this.munna=val}
+	});
+	
+	if(x.prop){x.prop(xElement)}
+	if(x.extends){
+		customElements.define(x.name,xElement,{extends:x.extends[1]});
+	}else{
+		customElements.define(x.name,xElement);
+	}
+	
+}
+customElementDef({
+	name:'my-elem',
+	attr:['class'],
+	attrChange:function(attr,oldValue,newValue){console.log(attr,oldValue,newValue)},
+	onCreate:function(){this.innerHTML='Ali Mohsin';},
+	onRemove:function(){console.log('removed',this)},
+});
+customElementDef({
+	name:'my-btn',
+	extends:[HTMLButtonElement,'button'],
+	init:function(){
+		this.addEventListener('click', () => alert("Hello!"));
+	},
+	prop:function(cls){
+		cls.prototype.munna="ali";
+		Object.defineProperty(cls.prototype, 'renad', {
+			get:function(){return this.munna},
+			set:function(val){this.munna=val}
+		});
+	},
+	attr:['class'],
+	attrChange:function(attr,oldValue,newValue){console.log(attr,oldValue,newValue)},
+	onCreate:function(){this.innerHTML='Renad munna';},
+	onRemove:function(){console.log('removed',this)},
+});
+
+// // polyfill
+// (function() {
+// 	if (void 0 === window.Reflect || void 0 === window.customElements || window.customElements.polyfillWrapFlushCallback) return;
+// 	const a=HTMLElement;
+// 	window.HTMLElement=function HTMLElement(){return Reflect.construct(a,[],this.constructor)},
+// 	HTMLElement.prototype=a.prototype,
+// 	HTMLElement.prototype.constructor=HTMLElement,
+// 	Object.setPrototypeOf(HTMLElement,a);
+// })();
+
+
+</script>
+<button is="hello-button">Click me</button>
+<hello-button>Click me too</hello-button>
+<my-elem></my-elem>
+<my-btn>dd</my-btn>
+<button is="my-btn">Click me</button>
+<script>
+he=dom('my-btn');
+console.log(he.renad);
+</script>
+</body>
+</html>

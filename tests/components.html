@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" theme="light">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>LibJS</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+	<script src="../dist/lib.js"></script>
+<style>
+html,body{width:100%;height:100%;}
+body{
+  margin:0;padding:0;
+  position:fixed;overflow:hidden;
+}
+div,body,img,input,canvas{box-sizing:border-box;}
+a,a:hover{text-decoration:none;color:black;outline:none;}
+:focus{outline:0;}
+::-moz-focus-inner{border:0;}
+*{-webkit-tap-highlight-color:transparent;}
+
+div,body{
+cursor:deafult;
+-webkit-touch-callout:none;
+-webkit-user-select:none;
+-khtml-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+user-select:none;
+}
+button{
+background:none;
+border:none;
+padding:0px;
+font-family:inherit;
+font-size:inherit;
+line-height:inherit;
+color:inherit;
+}
+body{
+	font-family:'Roboto',sans-serif;
+	padding:50px;
+	display:flex;flex-direction:column;gap:10px;
+}
+[theme='dark'] body{
+	background-color:black;
+	color:white;
+}
+fieldset{border-radius:5px;display:flex;flex-direction:row;gap:10px;}
+:root {
+	--primary-light:#42a5f5;
+	--primary-main:#1976d2;
+	--primary-dark:#1565c0;
+	--secondary-light:#ba68c8;
+	--secondary-main:#9c27b0;
+	--secondary-dark:#7b1fa2;
+	--error-light:#ef5350;
+	--error-main:#d32f2f;
+	--error-dark:#c62828;
+	--warning-light:#ff9800;
+	--warning-main:#ed6c02;
+	--warning-dark:#e65100;
+	--info-light:#03a9f4;
+	--info-main:#0288d1;
+	--info-dark:#01579b;
+	--success-light:#4caf50;
+	--success-main:#2e7d32;
+	--success-dark:#1b5e20;
+	--dark:#262626;
+	--accent:#e4bc11;
+	--radius:4px;
+	--stroke:1px;
+	--density:6px;
+	--hover-main:rgba(136, 136, 136,.2);
+}
+[theme] button[variant]{
+padding:var(--density) 16px;
+}
+[theme='material'] button{
+border-radius:var(--radius);
+}
+[theme='material'] button[variant='text']{
+color:var(--primary-main);
+}
+[theme='material'] button[variant='text']:hover{
+background-color:var(--hover-main);
+}
+[theme='material'] button[variant='text']:focus{
+background-color:var(--hover-main);
+}
+[theme='material'] button[variant='text']:active{
+background-color:var(--primary-main);
+color:white;
+}
+[theme='material'] button[variant='box']{
+background-color:var(--primary-main);
+color:white;
+}
+[theme='material'] button[variant='line']{
+border:solid var(--stroke) var(--primary-main);
+color:var(--primary-main);
+}
+[theme='material'] button[variant='line']:hover{
+background-color:var(--hover-main);
+}
+[theme='material'] button[variant='line']:focus{
+background-color:var(--hover-main);
+}
+
+</style>
+</head>
+<body class="" theme="material">
+	<fieldset>
+		<legend>Button</legend>
+		<button variant="text">Button</button>
+		<button variant="box">Button</button>
+		<button variant="line">Button</button>
+	</fieldset>
+	<label class="input" ><input type="text"></label>
+</body>
+</html>

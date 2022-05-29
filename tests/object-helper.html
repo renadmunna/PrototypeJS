@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Object Helper</title>
+	<script src="../dist/lib.js"></script>
+<style>
+button{
+
+}
+
+</style>
+</head>
+<body>
+	<button><span>Button</span><span>Button</span></button>
+<script>
+	// Element.prototype['+']={};
+	$('button').attr(':renad','munna');
+	console.log($('button').attr('renad'));
+	obj={};
+	obj['?']='renad';
+	console.log(obj);
+	
+	$('button')['+html']='ali  ';
+	$('button')['html+']='  mohsin';
+	console.log($('button')['+html']);
+</script>
+</body>
+</html>

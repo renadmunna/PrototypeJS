@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Pointer Event</title>
+	<script src="../dist/lib.js"></script>
+<style>
+button{
+background-color:blue;
+color:white;
+transition: all 200ms ease;
+}
+button:active{
+	background-color:red;
+}
+
+</style>
+</head>
+<body>
+	<button><span>Button</span><span>Button</span></button>
+<script>
+	Element.prototype.allEvent=function(fn){
+		this._tapFn=fn;
+		this.on('pointerdown',fn);
+		this.on('pointerup',fn);
+		this.off('pointermove',fn);
+		this.on('pointerenter',fn);
+		this.on('pointerleave',fn);
+		this.on('pointerover',fn);
+		this.on('pointerout',fn);
+	};
+	
+	// Element.prototype.tap=function(fn){
+	// 	this._tapFn=fn;
+	// 	this.on('pointerdown',function(e){
+	// 		// this.setPointerCapture(e.pointerId);
+	// 		this._tapFn(e);
+	// 		this.on('pointerup',function(e){});
+	// 	});
+	// 	// this.on('pointerenter',fn);
+	// 	this.on('pointerleave',function(e){
+	// 		this.off('pointermove',this._tapFn);
+	// 	});
+	// };
+	// dom('button').tap(function(e){
+	// 	console.log(e.type,e.target,this);
+	// });
+	Element.prototype.tap1=function(fn){
+		this._tapdown=fn.tapdown;
+		this._tapup=fn.tapup;
+		this._tap=fn.tap;
+		this.on('pointerdown',function(e){
+			// this.setPointerCapture(e.pointerId);
+			if(this._tapdown){this._tapdown(e)}
+			this.on('pointerup',function(e){
+				if(this._tapup){this._tapup(e)}
+				if(this._tap){this._tap(e)}
+			});
+		});
+		// this.on('pointerenter',fn);
+		this.on('pointerleave',function(e){
+			if(this._tapup){this._tapup(e)}
+			
+		});
+	};
+	EventTarget.prototype.tap2=function(fn){this._tapFn=fn;
+		this.on('pointerdown',function(e){
+			this._tapUp=function(e){
+				setTimeout(function(that){
+					that._tapFn({_e:e,type:'tapup'})
+					that._tapFn({_e:e,type:'tap'})
+				},300,this)
+			};
+			this._tapFn({_e:e,type:'tapdown'});
+			this.on('pointerup',this._tapUp,{once:true});
+			this.on('pointerleave',function(e){
+				this.off('pointerup',this._tapUp);
+				this._tapFn({_e:e,type:'tapup'});
+			},{once:true});
+		});
+	};
+	
+	EventTarget.prototype.tap=function(fn){this._tapFn=fn;
+		this.on('pointerdown',function(e){
+			this.setPointerCapture(e.pointerId);
+			this._tapFn(e);
+			this.on('pointerup',function(e){
+				hasTransition = window.getComputedStyle(this).transition !== "all 0s ease 0s";
+				if(!hasTransition){this._tapFn(e);return}
+				this._transitionStart=false;
+				this.on('transitionrun',function(e){this._transitionStart=true;console.log(e.type)},{once:true});
+				this.on('transitionstart',function(e){this._transitionStart=true;console.log(this)},{once:true});
+				this.on('transitioncancel',function(e){this._transitionStart=true;console.log(e.type)},{once:true});
+				this.on('transitionend',function(e){this._transitionStart=true;console.log(e.type)},{once:true});
+				console.log(this._transitionStart);
+				// this._transitionStart=false;
+				// this.on('transitionstart',function(){
+				// 	this._transitionStart=true
+				// },{once:true});
+				// console.log(hasTransition,this._transitionStart);
+				// if(hasTransition&&this._transitionStart){this.on('transitionend',this._tapFn,{once:true})}
+				// else{this._tapFn(e)}
+			},{once:true});
+		});
+	};
+	dom('button').tap(function(e){
+		console.log(e.type);
+	});
+</script>
+</body>
+</html>

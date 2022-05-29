@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title>
+	<script src="../dist/lib.js"></script>
+</head>
+<body>
+<script>
+a1={};
+a2={};
+
+console.time('test1');
+for(var i=0;i<10000;i++){
+	if(!a1['b'+i]){a1['b'+i]={}}
+}
+console.timeEnd('test1');
+
+console.time('test2');
+for(var i=0;i<10000;i++){
+	a2['c'+i]=a2['c'+i]||{};
+}
+console.timeEnd('test2');
+console.log(a1);
+console.log(a2);
+</script>	
+</body>
+</html>

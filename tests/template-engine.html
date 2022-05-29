@@ -4,28 +4,13 @@
 	<div class="view" id="a">
 		<div id="${id}">${text} ${bl} ${a['b'].c} ${a["b"].c} ${n[0]} ${m[1]}</div>
 	</div>
+	<script src="../dist/lib.js"></script>
 <script>
 function test(label,itr,func){
 	console.time(label);
 	for(var i=0;i<itr;i++){ func() }
 	console.timeEnd(label);
 }
-var dom=document.querySelector.bind(document);
-var doms=document.querySelectorAll.bind(document);
-
-HTMLElement.prototype.attr=function(){
-return arguments.length==1 && this.getAttribute(arguments[0])
-	|| arguments.length==2 && this.setAttribute(arguments[0],arguments[1]);
-};
-EventTarget.prototype.on = EventTarget.prototype.addEventListener;
-EventTarget.prototype.trigger = EventTarget.prototype.dispatchEvent;
-
-// (value,index,obj)=>
-NodeList.prototype.each=NodeList.prototype.forEach;
-Array.prototype.each=Array.prototype.forEach;
-Object.prototype.each=function(func){obj=this;
-	for(const key in obj){if(obj.hasOwnProperty(key)&&func){func(obj[key],key,obj)}}
-};
 
 function render0(template,data){
 	var tpl = template.replace(/\${(?!this\.)/g, "${this.");
@@ -48,7 +33,8 @@ String.prototype.render=function(data){return this.replace(/\${(.*?)}/g,function
 
 
 HTMLElement.prototype._render=function(data){that=this;
-	that.template=that.template||that.innerHTML;that.renderHTML='';
+	if(!that.template){that.template=that.innerHTML;that.innerHTML=''}
+	that.renderHTML='';
 	if(Array.isArray(data)){
 		data.each(function(item){
 			that.renderHTML+=that.template.render(item)
@@ -60,10 +46,10 @@ HTMLElement.prototype.render=function(data){this._render(data);
 	this.innerHTML=this.renderHTML;
 };
 HTMLElement.prototype.renderAfter=function(data){this._render(data);
-	this.innerHTML+=this.renderHTML;
+	this.insertAdjacentHTML('beforeend',this.renderHTML);
 };
 HTMLElement.prototype.renderBefore=function(data){this._render(data);
-	this.innerHTML=this.renderHTML+this.innerHTML;
+	this.insertAdjacentHTML('afterbegin',this.renderHTML);
 };
 
 
@@ -73,13 +59,12 @@ HTMLElement.prototype.renderBefore=function(data){this._render(data);
 		{id:143,text:'hello',bl:true,a:{b:{c:'renad'}},n:['a1','b1'],m:{1:'munna'}},
 		{id:144,text:'renad munna',bl:false,a:{b:{c:'ali'}},n:['a4','b4'],m:{1:'anni'}}
 	];
-	// console.log(dom('#a').innerHTML.render(data));
-	// dom('#a').render(data);
-	// console.log(Object.keys(data));
-	// dom('.view').render(data);
+	
 	dom('.view').render(data[1]);
+	dom('.view div').on('click',function(e){console.log(e)});
 	dom('.view').renderAfter(data);
 	dom('.view').renderBefore(data[0]);
+
 	// dom('#a').innerHTML=render(tpl,data)
 	// console.log(render(tpl,data));
 

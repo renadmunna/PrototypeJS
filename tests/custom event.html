@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title>
+	<script src="../dist/lib.js"></script>
+</head>
 <body>
-	<div id=""></div>
+	<div id="a">renad</div>
 <script>
 
-EventTarget.prototype.on = EventTarget.prototype.addEventListener;
-EventTarget.prototype.trigger = EventTarget.prototype.dispatchEvent;
 
 
 window.on('custom',function(e){
@@ -14,25 +18,53 @@ window.on('custom',function(e){
 window.on('custom',function(e){
 	console.log('renad')
 });
-var custom = new CustomEvent('custom', {
-  detail: {
-    name: 'cat'
-  }
-});
-window.custom && window.trigger(custom);
+window['+on']('custom',{name:'cat'})
+window['@on']('custom');
 
 
-var dom=document.querySelector.bind(document);
-HTMLElement.prototype.attr=function(){
-return arguments.length==1 && this.getAttribute(arguments[0])
-	|| arguments.length==2 && this.setAttribute(arguments[0],arguments[1]);
+Object.prototype._on=EventTarget.prototype._on;
+Object.prototype.on=EventTarget.prototype.on;
+Object.prototype.on_=EventTarget.prototype.on_;
+var abc={};
+
+abc.func=function(name){
+	return name+' Hi';
 };
-var a=function(){
-	return 
-};
-if(dom('div').attr('id'))console.log('ok');
-// console.log(dom('div').attr('id')==true)
+ab=abc;
+
+console.log(ab.on);
+
+// EventTarget.prototype.trigger = EventTarget.prototype.dispatchEvent;
+// EventTarget.prototype._on = EventTarget.prototype.addEventListener;
+// EventTarget.prototype.addEventListener=function(type,listener,options){
+// 	switch(type) {
+// 		case 'tap':
+// 			this._on('click',listener,options);
+// 		  break;
+// 		case 'dbltap':
+// 			this._on('dblclick',listener,options);
+// 		  break;
+// 		default:this._on(type,listener,options);
+// 	}
+// };
+// EventTarget.prototype.on = EventTarget.prototype.addEventListener;
+
+// console.log(Element.prototype.onclick);
+// Element.prototype._click=Element.prototype.click;
+// Element.prototype.click=function(action){
+// 	// this._click();
+// 	console.log('ok2');
+// 	this.addEventListener('click', action, false);
+// 	return this;
+// };
+
+// function a(e){
+// 	console.log('ok3');
+// }
+// dom('#a').on('dbltap',function(e){
+// 	console.log('ok');
+// });
+// // console.log(dom('div').attr('id')==true)
 </script>
-
 </body>
 </html>
