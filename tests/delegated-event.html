@@ -4,37 +4,54 @@
 	<meta charset="UTF-8">
 	<link rel="icon" href="data:" type="image/svg+xml">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>LibJS</title>
+	<title>LibJS</title><script src="../src/dev.js"></script>
 	<script src="../dist/lib.js"></script>
 </head>
 <body>
 	<div class="box">
-		<div class="item"><span>dd</span></div>
+		<div class="item"><span>#############</span></div>
 	</div>
 <script>
-HTMLElement.prototype.onChild=function(event,child,func){
-	// console.log(event,child,func,this.on);
-	this.delegate={'child':child,'func':func}
-	this.on(event,function(e){
-		var child=e.target.closest(this.delegate.child);
-		console.log(child);
-		if(child){this.delegate.func(e)}
-		// console.log(this.delegate,e.target.closest(this.delegate.child));
-	})
+// EventTarget.prototype.onChild=function(event,child,func){
+// 	// console.log(event,child,func,this.on);
+// 	this.delegate={'child':child,'func':func}
+// 	this.on(event,function(e){
+// 		var child=e.target.closest(this.delegate.child);
+// 		console.log(child);
+// 		if(child){this.delegate.func(e)}
+// 		// console.log(this.delegate,e.target.closest(this.delegate.child));
+// 	})
+// };
+// EventTarget.prototype['$on']=function(event,child,fn){
+// 	this.delegate={'child':child,'fn':fn}
+// 	this.on(event,function(e){
+// 		// console.log(event,child,fn);
+// 		var child=e.target.closest(this.delegate.child);
+// 		if(child){child.delegate=this.delegate.fn;child.delegate(e)}
+// 		// var child=e.target.closest(selector);
+// 		// if(child){child.delegate=fn;child.delegate(e)}
+// 	})
+// };
+EventTarget.prototype['@on']=function(event,selector,fn){
+	this.on(event,function(e,selector,fn){_(e,selector,fn);
+		var child=e.target.closest(selector);if(child){fn.call(child,e)}
+	}.args(selector,fn));
 };
-dom('.box').onChild('click','.item',function(e){
-	console.log(e)
+
+
+$('.box')['@on']('click','.item',function(e){
+	console.log(this.html,this.className,e)
 });
-dom('.box').innerHTML+=`
-		<div class="item"><span>dd</span></div>
-		<div class="item"><span>dd</span></div>
-		<div class="item"><span>dd</span></div>
-		<div class="item"><span>dd</span></div>
-		<div class="item"><span>dd<div class="item">wrong</div></span></div>
-		<div class="item"><span>dd<div class="item">wrong</div></span></div>
-		<div class="item"><span>dd<div class="item">wrong</div></span></div>
-		<div class="item1"><span>dd</span></div>
-		<div class="item1"><span>dd</span></div>
+$('.box').html+=`
+		<div class="item"><span>#############</span></div>
+		<div class="item"><span>#############</span></div>
+		<div class="item"><span>#############</span></div>
+		<div class="item"><span>#############</span></div>
+		<div class="item"><span>############# <span class="item2">wrong</span></span></div>
+		<div class="item"><span>############# <span class="item2">wrong</span></span></div>
+		<div class="item"><span>############# <span class="item2">wrong</span></span></div>
+		<div class="item1"><span>#############</span></div>
+		<div class="item1"><span>#############</span></div>
 `;
 </script>
 </body>

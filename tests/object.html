@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Object Helper</title><script src="../src/dev.js"></script>
+	<script src="../dist/lib.js"></script>
+<style>
+button{
+
+}
+
+</style>
+</head>
+<body>
+	<button><span>Button</span><span>Button</span></button>
+<script>
+
+// Object.prototype.keys=function(){return Object.keys(this)};
+// Object.defineProperty(Object.prototype,'keys',{get(){return Object.keys(this)}});
+
+// Object.defineProperty(Object.prototype,'proto',{get(){return Object.getPrototypeOf(this)}});
+
+
+obj={a:'renad',b:'munna',c:'ali',d:'mohsin'};
+
+// test('prop',10000,function(){obj.keys;});
+// test('fn',10000,function(){obj.keys();});
+
+// obj.each(function(value,key,obj){
+// 	_(key,value,obj,this);
+// });
+
+// obj.each(function(value,key,obj){
+// 	_(key,value,obj,this);
+// },$('button'));
+
+Object.listener(obj);
+obj.on('test',function(e){
+_(e,arguments);
+}.args('ali'));
+obj.trigger('test',{renad:'munna'});
+_(obj.events);
+</script>
+</body>
+</html>

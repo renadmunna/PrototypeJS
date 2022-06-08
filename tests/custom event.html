@@ -3,13 +3,28 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>LibJS</title>
+	<title>LibJS</title><script src="../src/dev.js"></script>
 	<script src="../dist/lib.js"></script>
 </head>
 <body>
 	<div id="a">renad</div>
 <script>
 
+// Object.prototype.on=function(e,fn){
+// 	var proto=Object.getPrototypeOf(this);
+// 	if(!proto.events){proto.events={}}
+// 	if(!this.events[e]){this.events[e]=[]}
+// 	this.events[e].push(fn);
+// };
+// Object.prototype.trigger=function(e,data){
+// 	if(!this.events||!this.events[e]){return}
+// 	var proto=Object.getPrototypeOf(this),that=this;
+// 	this.events[e].each(function(event,index){
+// 		id=e+'_event_'+index;
+// 		proto[id]=event;
+// 		that[id](data);
+// 	});
+// };
 
 
 window.on('custom',function(e){
@@ -18,8 +33,7 @@ window.on('custom',function(e){
 window.on('custom',function(e){
 	console.log('renad')
 });
-window['+on']('custom',{name:'cat'})
-window['@on']('custom');
+window.trigger('custom',{name:'cat'});
 
 
 Object.prototype._on=EventTarget.prototype._on;

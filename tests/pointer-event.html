@@ -3,18 +3,51 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Pointer Event</title>
+	<title>Pointer Event</title><script src="../src/dev.js"></script>
 	<script src="../dist/lib.js"></script>
 <style>
 button{
 background-color:blue;
 color:white;
-transition: all 200ms ease;
+border:none;
+/* transition: all 150ms ease; */
+background-position: center;
+transition: transform 150ms ease, background 800ms ease;
+width:500px;
+height:500px;
 }
 button:active{
-	background-color:red;
+	transform:scale(.9);
+}
+button:active{
+	transform:scale(.9);
+}
+button {
+  background-position: center;
+  transition: background 0.8s;
+}
+button:hover {
+  background: #47a7f5 radial-gradient(circle, transparent 1%, #47a7f5 1%) center/15000%;
+}
+button:active {
+  background-color: #6eb9f7;
+  background-size: 100%;
+  transition: background 0s;
 }
 
+/* Button style */
+button {
+  border: none;
+  border-radius: 2px;
+  padding: 12px 18px;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: white;
+  background-color: #2196f3;
+  box-shadow: 0 0 4px #999;
+  outline: none;
+}
 </style>
 </head>
 <body>
@@ -81,7 +114,7 @@ button:active{
 		});
 	};
 	
-	EventTarget.prototype.tap=function(fn){this._tapFn=fn;
+	EventTarget.prototype.tap3=function(fn){this._tapFn=fn;
 		this.on('pointerdown',function(e){
 			this.setPointerCapture(e.pointerId);
 			this._tapFn(e);
@@ -104,7 +137,27 @@ button:active{
 			},{once:true});
 		});
 	};
-	dom('button').tap(function(e){
+	EventTarget.prototype.tap=function(fn){this._tapFn=fn;
+		this.on('pointerdown',function(e){
+			this.setPointerCapture(e.pointerId);this._tapFn(e);
+			this.on('pointerup',function(e){this._tapFn(e)},{once:true});
+		});
+	};
+	
+	// EventTarget.prototype.tap=function(fn){this._tapFn=fn;
+	// 	this.on('pointerdown',function(e){
+	// 		this.setPointerCapture(e.pointerId);this._tapFn(e);
+	// 		this.on('pointerup',function(e){this._tapEv=e;
+	// 			this.on('transitionend',function(e){
+	// 				this._tapFn(this._tapEv);
+	// 			},{once:true});
+	// 		},{once:true});
+	// 	});
+	// };
+	// dom('button').tap(function(e){
+	// 	console.log(e.type);
+	// });
+	dom('button').tap2(function(e){
 		console.log(e.type);
 	});
 </script>

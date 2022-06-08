@@ -3,14 +3,14 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>LibJS</title>
+	<title>LibJS</title><script src="../src/dev.js"></script>
 	<script src="../dist/lib.js"></script>
 </head>
 <body>
 <script>
+// const _t=console.time;
 a1={};
 a2={};
-
 console.time('test1');
 for(var i=0;i<10000;i++){
 	if(!a1['b'+i]){a1['b'+i]={}}

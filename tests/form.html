@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title><script src="../src/dev.js"></script>
+	<script src="../dist/lib.js"></script>
+</head>
+<body>
+<script>
+HTMLFormElement.prototype.json=function(json){form=this;
+	if(json){
+		this.data=json;
+		this.elements.each(function(elem){
+			if(elem.name in json){elem.val=json[elem.name]}
+		},this);
+	}else{
+		var json={};
+		this.elements.each(function(elem){
+			if(!(elem.name in json)){json[elem.name]=elem.val}
+		});
+		this.data=json;
+		return json;
+	}
+};
+Object.defineProperty(HTMLFormElement.prototype,'json',{
+	get(){
+		var json={};
+		this.elements.each(function(elem){if(!(elem.name in json)){json[elem.name]=elem.val}});
+		return json;
+	},
+	set(json){
+		this.elements.each(function(elem){if(elem.name in json){elem.val=json[elem.name]}});
+	}
+});
+</script>
+</body>
+</html>

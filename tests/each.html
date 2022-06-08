@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title><script src="../src/dev.js"></script>
+	<script src="../dist/lib.js"></script>
+</head>
+<body>
+<script>
+HTMLCollection.prototype.each=Object.prototype.each;
+HTMLFormControlsCollection.prototype.each=function(func){
+for (var i=0;i<this.length;i++){func(this[i],i,this)}
+};
+
+
+Object.prototype.each=function(func){obj=this;
+	for(const key in obj){if(obj.hasOwnProperty(key)&&func){func(obj[key],key,obj)}}
+};
+HTMLCollection.prototype.each=function(func){
+	for (var i=0;i<this.length;i++){func(this[i],i,this)}
+};
+
+// Object.prototype.each=function(func){obj=this;
+// 	for(const key in obj){if(obj.hasOwnProperty(key)&&func){func(obj[key],key,obj)}}
+// };
+// HTMLCollection.prototype.each=function(func){
+// 	for (var i=0;i<this.length;i++){func(this[i],i,this)}
+// };
+
+
+// HTMLCollection.prototype.each=Object.prototype.each;
+</script>
+</body>
+</html>
