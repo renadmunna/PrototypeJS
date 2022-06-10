@@ -14,8 +14,8 @@ Object.prototype.each=function(fn,that){
 };
 HTMLCollection.prototype.each=Object.prototype.each;
 // Function
-Function.prototype.args=function(){that=this;pass=[].slice.call(arguments);
-	return function(e){args=[e].concat(pass);that.apply(this,args)};
+Function.prototype.args=function(){var fn=this,pass=[].slice.call(arguments);
+	return function(e){var args=[e].concat(pass);fn.apply(this,args)};
 };
 // Event
 EventTarget.prototype.on = EventTarget.prototype.addEventListener;
@@ -32,7 +32,7 @@ Object.listener=function(obj){
 };
 // delegate event
 EventTarget.prototype['@on']=function(event,selector,fn){
-	this.on(event,function(e,selector,fn){_(e,selector,fn);
+	this.on(event,function(e,selector,fn){
 		var child=e.target.closest(selector);if(child){fn.call(child,e)}
 	}.args(selector,fn));
 };
