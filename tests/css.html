@@ -28,12 +28,16 @@
 // dom('.a').css('color','red');
 
 // Element.prototype.css=function(prop,val){this.style.setProperty(prop,val)};
-Element.prototype.css=function(){
-	if(arguments.length==1){that=this;
-		arguments[0].each(function(val,pror){that.style.setProperty(prop,val)});
-	}
-	if(arguments.length>1){this.style.setProperty(arguments[0],arguments[1])}
-};
+
+// Element.prototype.css=function(){
+// 	if(arguments.length==1){that=this;
+// 		arguments[0].each(function(val,pror){that.style.setProperty(prop,val)});
+// 	}
+// 	if(arguments.length>1){this.style.setProperty(arguments[0],arguments[1])}
+// };
+// Element.prototype.css=function(css){
+// 	css.each(function(val,prop){this.style.setProperty(prop,val)},this);
+// };
 
 // $('.a').css('background-color','red');
 // $('.a').css('color','white');
@@ -43,7 +47,12 @@ Element.prototype.css=function(){
 $('.a').css({
 	'background-color':'red',
 	'color':'white',
-	'background-color':'blue'
+	'background-color':'blue',
+	'display':'inline-block',
+	'padding':'5px',
+	'padding-top':'50px',
+	'padding-bottom':'50px',
+	'border-radius':'100vmax'
 });
 </script>
 </body>

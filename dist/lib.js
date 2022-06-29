@@ -15,7 +15,7 @@ Object.prototype.each=function(fn,that){
 HTMLCollection.prototype.each=Object.prototype.each;
 // Function
 Function.prototype.args=function(){var fn=this,pass=[].slice.call(arguments);
-	return function(e){var args=[e].concat(pass);fn.apply(this,args)};
+	return function(){var args=[].slice.call(arguments).concat(pass);fn.apply(this,args)};
 };
 // Event
 EventTarget.prototype.on = EventTarget.prototype.addEventListener;
@@ -44,6 +44,10 @@ Element.prototype.attr=function(){
 Element.prototype['+attr']=function(attr){this.setAttribute(attr,'')};
 Element.prototype['-attr']=function(attr){this.removeAttribute(attr)};
 Element.prototype['?attr']=function(attr){return this.hasAttribute(attr)};
+Element.prototype['!attr']=function(attr,val){
+	if(this.hasAttribute(attr)){this.removeAttribute(attr)}
+	else{this.setAttribute(attr,val||'')}
+};
 Element.prototype['@attr']=function(attr){return this.getAttribute(attr)};
 Element.prototype['=attr']=function(attr){return this.getAttribute(attr)};
 Element.prototype['attr=']=function(attr,val){this.setAttribute(attr,val)};
@@ -61,9 +65,26 @@ Object.defineProperty(Element.prototype,'+html',{
 Object.defineProperty(Element.prototype,'html+',{
 	set(html){this.insertAdjacentHTML('beforeend',html)}
 });
+// Parent Child
+if(!Element.prototype.remove){Element.prototype.remove=function(){this.parent.removeChild(this)}}
+// Node.prototype._parent=Object.getOwnPropertyDescriptor(Node.prototype,'parentElement');
+Node.prototype._parent=Object.getOwnPropertyDescriptor(Node.prototype,'parentNode');
+Object.defineProperty(Node.prototype,'parent',Node.prototype._parent);
+Element.prototype._child=Object.getOwnPropertyDescriptor(Element.prototype,'children');
+Object.defineProperty(Element.prototype,'child',Element.prototype._child);
+Element.prototype._first=Object.getOwnPropertyDescriptor(Element.prototype,'firstElementChild');
+Object.defineProperty(Element.prototype,'first',Element.prototype._first);
+Element.prototype._last=Object.getOwnPropertyDescriptor(Element.prototype,'lastElementChild');
+Object.defineProperty(Element.prototype,'last',Element.prototype._last);
+Element.prototype._prev=Object.getOwnPropertyDescriptor(Element.prototype,'previousElementSibling');
+Object.defineProperty(Element.prototype,'previous',Element.prototype._prev);
+Object.defineProperty(Element.prototype,'prev',Element.prototype._prev);
+Element.prototype._next=Object.getOwnPropertyDescriptor(Element.prototype,'nextElementSibling');
+Object.defineProperty(Element.prototype,'next',Element.prototype._next);
 // css
-Element.prototype.css=function(css){
-	css.each(function(val,prop){this.style.setProperty(prop,val)},this);
+Element.prototype.css=function(prop,val){
+	if(val){this.style.setProperty(prop,val)}
+	else{prop.each(function(val,prop){this.style.setProperty(prop,val)},this);}
 };
 // Template
 String.prototype.render=function(data){return this.replace(/\${(.*?)}/g,function(x,g){
