@@ -41,6 +41,10 @@ _(e,arguments);
 }.args('ali'));
 obj.trigger('test',{renad:'munna'});
 _(obj.events);
+
+
+obj1={a:'renad',b:'munna',c:'ali',d:'mohsin',e:function(){return 'ami'},f:function(){return this.e()}};
+_(obj1.f());
 </script>
 </body>
 </html>

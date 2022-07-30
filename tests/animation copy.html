@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title><script src="../src/dev.js"></script>
+	<script src="../dist/lib.js"></script>
+<style>
+.a,.b{
+position:absolute;
+left:0;top:0;
+width:100px;height:100px;
+background-color:tomato;
+}
+.b{top:100px;}
+</style>
+</head>
+<body>
+	<div class="a"></div>
+	<div class="b"></div>
+
+
+<script src="../src/anime.min.js"></script>
+<script>
+// const element = $('.a');
+// let start, previousTimeStamp;
+// let done = false
+
+// function step(timestamp) {_(timestamp);
+//   if (start === undefined) {
+// 	start = timestamp;
+// 	}
+//   const elapsed = timestamp - start;
+
+//   if (previousTimeStamp !== timestamp) {
+// 	// Math.min() is used here to make sure the element stops at exactly 200px
+// 	const count = Math.min(0.1 * elapsed, 200);
+// 	element.style.transform = 'translateX(' + count + 'px)';
+// 	if (count === 200) done = true;
+//   }
+
+//   if (elapsed < 2000) { // Stop the animation after 2 seconds
+// 	previousTimeStamp = timestamp
+// 	!done && window.requestAnimationFrame(step);
+//   }
+// }
+// window.requestAnimationFrame(step);
+
+// const square = document.querySelector('.a');
+// const amountOfPixelsToAnimate = 100;
+// const duration = 1000;
+
+// let left = 0;
+// let starttime = null;
+
+// function animate(timestamp){
+//   if(!starttime){starttime=timestamp}
+//   const runtime = timestamp - starttime;
+//   const relativeProgress = runtime / duration;
+//   // 1. We're calculating a new left position based on the relative progress we've made in time. 
+//   // 2. We're using Math.min to ensure that the progress value will never more be more than 1 (one hundred percent). That way the new animation value will never be more than the distance we want to cover. This is called "clamping".
+//   left = amountOfPixelsToAnimate * Math.min(relativeProgress, 1);
+  
+//   // Use translateX to ensure GPU use for animation
+//   square.style.transform = `translateX(${left}px)`;
+  
+//   // We want to request another frame when our desired duration isn't met yet
+//   if (runtime < duration) {
+// 	  requestAnimationFrame(animate);
+//   }
+// }
+
+// // We need to wrap animate in rAf in order to get passed the timestamp
+// requestAnimationFrame(animate);
+const fps={};
+
+fps.once=function(fn,duration,range){
+	var anim={};
+	var m,n;
+	if(range[0]<range[1]){m=1;n=range[0];range=range[1]-range[0]}
+	else{m=-1;n=range[1];range=range[1]-range[0]}
+	
+	anim.fn=function(now){
+		if(!anim.start){anim.start=now}
+		const run=now-anim.start;
+		const progress=run/duration;
+		result = range * Math.min(progress,1);
+		// const count = Math.min(0.1 * elapsed, 200);
+		fn(result);
+		if(run<duration){requestAnimationFrame(anim.fn)}
+	};
+	requestAnimationFrame(anim.fn);
+};
+
+fps.task=[];
+fps.add=function(fn,duration,range,callback){
+	var m,n;
+	if(range[0]<range[1]){m=1;n=range[0];range=range[1]-range[0]}
+	else{m=-1;n=range[1];range=range[1]-range[0]}
+	var anim=function(now){
+		if(!this.start){this.callback('start');this.start=now}
+		var elapsed=now-this.start;
+		// if(this.stamp!==now){}
+		const result = Math.min(0.1 * elapsed, this.range);
+		this.fn(result);
+		if(elapsed<this.duration){return true;}
+		this.callback('stop');
+		return false;
+	};
+	fps.task.push({fn:fn,duration:duration,range:range,callback:callback,m:m,n:n,anim:anim});
+};
+
+fps.process=function(now){
+	fps.task.each(function(task,index,arr){
+		if(!task.anim(now)){arr.splice(index,1)}
+	});
+	if(fps.task.length==0 && fps.done){fps.done()}
+	if(fps.status){requestAnimationFrame(fps.process)}
+};
+fps.status=false;
+fps.start=function(){this.status=true;requestAnimationFrame(this.process)};
+fps.stop=function(){this.status=false};
+
+
+a=$('.a');
+b=$('.b');
+fps.once(function(val){
+	_(val);
+	a.style.transform=`translateX(${val}px)`;
+},1000,[0,150],0,function(status){_(status)});
+fps.once(function(val){
+	b.style.transform=`translateX(${val}px)`;
+},2000,[0,300],function(status){_(status)});
+
+
+
+
+// fps.add(function(val){
+// 	a.style.transform=`translateX(${val}px)`;
+// },1000,[0,150],function(status){_(status)});
+// fps.add(function(val){
+// 	b.style.transform=`translateX(${val}px)`;
+// },2000,[0,300],function(status){_(status)});
+// fps.done=function(){
+// 	_('done');fps.stop();
+// };
+// fps.start();
+
+
+// anime({
+//   targets: '.a',
+//   translateX: 250
+// });
+// anime({
+//   targets: '.a',
+//   translateX: 270,
+// //   delay: 1000,
+// //   direction: 'alternate',
+// //   loop: 3,
+//   easing: 'easeInOutCirc',
+//   update: function(anim){
+// 	_(Math.round(anim.progress));
+// 	_(anim);
+//   }
+// })
+
+</script>
+</body>
+</html>

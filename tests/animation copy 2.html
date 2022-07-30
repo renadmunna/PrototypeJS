@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title><script src="../src/dev.js"></script>
+	<script src="../dist/lib.js"></script>
+<style>
+.a,.b{
+position:absolute;
+left:0;top:0;
+width:100px;height:100px;
+background-color:tomato;
+}
+.b{top:100px;}
+</style>
+</head>
+<body>
+	<div class="a"></div>
+	<div class="b"></div>
+
+
+<!-- <script src="../src/fps.js"></script> -->
+<!-- <script src="../src/anime.min.js"></script> -->
+<script>
+var easingFunction = {
+    default: 'easeInQuad',
+    get: function (easing) {
+        if (this[easing]) {
+            return this[easing];
+        }
+        else {
+            return this[this.default];
+        }
+    },
+    linear: function (t, b, c, d) { return (c * t) / d + b; },
+    easeInQuad: function (t, b, c, d) { return c * (t /= d) * t + b; },
+    easeOutQuad: function (t, b, c, d) { return -c * (t /= d) * (t - 2) + b; },
+    easeInOutQuad: function (t, b, c, d) {
+        return (t /= d / 2) < 1 ? (c / 2) * t * t + b : (-c / 2) * (--t * (t - 2) - 1) + b;
+    },
+    easeInCubic: function (t, b, c, d) { return c * (t /= d) * t * t + b; },
+    easeOutCubic: function (t, b, c, d) { return c * ((t = t / d - 1) * t * t + 1) + b; },
+    easeInOutCubic: function (t, b, c, d) {
+        return (t /= d / 2) < 1
+            ? (c / 2) * t * t * t + b
+            : (c / 2) * ((t -= 2) * t * t + 2) + b;
+    },
+    easeInQuart: function (t, b, c, d) { return c * (t /= d) * t * t * t + b; },
+    easeOutQuart: function (t, b, c, d) { return -c * ((t = t / d - 1) * t * t * t - 1) + b; },
+    easeInOutQuart: function (t, b, c, d) {
+        return (t /= d / 2) < 1
+            ? (c / 2) * t * t * t * t + b
+            : (-c / 2) * ((t -= 2) * t * t * t - 2) + b;
+    },
+    easeInQuint: function (t, b, c, d) { return c * (t /= d) * t * t * t * t + b; },
+    easeOutQuint: function (t, b, c, d) { return c * ((t = t / d - 1) * t * t * t * t + 1) + b; },
+    easeInOutQuint: function (t, b, c, d) {
+        return (t /= d / 2) < 1
+            ? (c / 2) * t * t * t * t * t + b
+            : (c / 2) * ((t -= 2) * t * t * t * t + 2) + b;
+    }
+};
+const easing={};
+easing.linear=function(t){return t};
+easing.easeInBy=function(power){
+  return function (t){return Math.pow(t, power)};
+};
+easing.easeOutBy=function(power){
+  return function (t){
+    return 1 - Math.abs(Math.pow(t - 1, power));
+  };
+};
+easing.easeInOutBy=function(power){
+  return function (t){
+    return t < 0.5 ? easeInBy(power)(t * 2) / 2 : easeOutBy(power)(t * 2 - 1) / 2 + 0.5;
+  };
+};
+easing.quadIn=easing.easeInBy(2);
+easing.quadOut=easing.easeOutBy(2);
+easing.quadInOut=easing.easeInOutBy(2);
+easing.cubicIn=easing.easeInBy(3);
+easing.cubicOut=easing.easeOutBy(3);
+easing.cubicInOut=easing.easeInOutBy(3);
+easing.quartIn=easing.easeInBy(4);
+easing.quartOut=easing.easeOutBy(4);
+easing.quartInOut=easing.easeInOutBy(4);
+easing.quintIn=easing.easeInBy(5);
+easing.quintOut=easing.easeOutBy(5);
+easing.quintInOut=easing.easeInOutBy(5);
+easing.sineIn=function(t){
+  return 1 + Math.sin(Math.PI / 2 * t - Math.PI / 2);
+};
+easing.sineOut=function(t){
+  return Math.sin(Math.PI / 2 * t);
+};
+easing.sineInOut=function(t){
+  return (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2;
+};
+easing.bounceOut=function(t){
+  var s = 7.5625;
+  var p = 2.75;
+
+  if (t < 1 / p){
+    return s * t * t;
+  }
+  if (t < 2 / p){
+    t -= 1.5 / p;
+    return s * t * t + 0.75;
+  }
+  if (t < 2.5 / p){
+    t -= 2.25 / p;
+    return s * t * t + 0.9375;
+  }
+  t -= 2.625 / p;
+  return s * t * t + 0.984375;
+};
+easing.bounceIn=function(t){
+  return 1 - bounceOut(1 - t);
+};
+easing.bounceInOut=function(t){
+  return t < 0.5 ? bounceIn(t * 2) * 0.5 : bounceOut(t * 2 - 1) * 0.5 + 0.5;
+};
+const fps=function(task){
+	task.from=task.range[0];
+	task.to=task.range[1];
+	if(task.from<task.to){
+		task.range=task.to-task.from;
+		task.m=1;
+	}
+	else{task.range=task.from-task.to;task.m=-1;}
+
+	task.status=true;
+	task.play=function(){task.ref=requestAnimationFrame(task.loop)};
+	task.stop=function(){task.status=false;cancelAnimationFrame(task.ref)};
+	task.process=function(now){
+		if(!task.start){task.callback(task.status);task.start=now}
+		const run=now-task.start;
+		var progress=run/task.duration;
+
+		// if(task.easing){
+		// 	progress=easing[task.easing](progress);
+		// }
+		// result=task.range*Math.min(progress,1);
+		result=easingFunction[task.easing](run, task.from*task.m, task.range, task.duration);
+
+		result=task.from+(result*task.m);
+		task.fn(result);
+		if(run<task.duration){return true;}
+		task.status=false;
+		task.callback(task.status);
+		return false;
+	};
+	if(task.once){
+		task.fn=task.once;
+		task.loop=function(now){
+			if(task.process(now)&&task.status){task.ref=requestAnimationFrame(task.loop)}
+		};
+		task.ref=requestAnimationFrame(task.loop);
+	}else if(task.add){
+		task.fn=task.add;
+		fps.task.push(task);
+	}
+	return task;
+};
+fps.task=[];
+fps.loop=function(now){_(now);
+	fps.task.each(function(task,index,arr){
+		if(!task.process(now)){arr.splice(index,1)}
+	});
+	if(fps.task.length==0 && fps.done){fps.done()}
+	if(fps.status){fps.ref=requestAnimationFrame(fps.loop)}
+};
+fps.status=false;
+fps.play=function(){fps.status=true;fps.ref=requestAnimationFrame(fps.loop)};
+fps.stop=function(){fps.status=false;cancelAnimationFrame(fps.ref)};
+
+
+a=$('.a');
+b=$('.b');
+
+// ref1=fps({duration:1000,range:[0,150],delay:1000,easing:'linear',
+// 	once:function(val){
+// 		a.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)}
+// });
+// ref2=fps({duration:2000,range:[0,300],delay:1000,easing:'bounceOut',
+// 	once:function(val){
+// 		b.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)}
+// });
+// setTimeout(function(){ref2.stop()}, 1000);
+// setTimeout(function(){ref2.play()}, 2000);
+
+ref1=fps({duration:1000,range:[0,150],delay:1000,easing:'easeInQuint',
+	add:function(val){
+		a.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){
+		_(status);
+		if(!status)
+		fps.stop();
+	}
+});
+ref2=fps({duration:2000,range:[300,0],delay:1000,easing:'easeInQuint',
+	add:function(val){
+		b.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)}
+});
+
+ref1=fps({duration:1000,range:[0,150],delay:1000,easing:'easeInQuint',
+	update:function(val){
+		a.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)},
+  done:function(){_(done)}
+});
+ref2=fps({duration:1000,range:[300,150],delay:1000,easing:'easeInQuint',
+	update:function(val){
+		b.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)},
+  done:function(){_(done)}
+});
+
+fps.add({duration:1000,range:[0,150],delay:1000,easing:'easeInQuint',
+	update:function(val){
+		a.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)},
+  done:function(){_(done)}
+},{duration:1000,range:[300,150],delay:1000,easing:'easeInQuint',
+	update:function(val){
+		b.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)},
+  done:function(){_(done)}
+});
+
+// fps.start();
+// fps.stop();
+
+fps.timeline({duration:1000,range:[0,150],delay:1000,easing:'easeInQuint',
+	update:function(val){
+		a.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)},
+  done:function(){_(done)}
+},{duration:1000,range:[300,150],delay:1000,easing:'easeInQuint',
+	update:function(val){
+		b.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)},
+  done:function(){_(done)}
+});
+// fps.timeline.start();
+// fps.timeline.stop();
+
+// fps.add(function(val){
+// 	a.style.transform=`translateX(${val}px)`;
+// },1000,[0,150],function(status){_(status)});
+// fps.add(function(val){
+// 	b.style.transform=`translateX(${val}px)`;
+// },2000,[0,300],function(status){_(status)});
+// fps.done=function(){
+// 	_('done');fps.stop();
+// };
+// fps.start();
+
+
+// anime({
+//   targets: '.a',
+//   translateX: 250
+// });
+// anime({
+//   targets: '.a',
+//   translateX: 270,
+// //   delay: 1000,
+// //   direction: 'alternate',
+// //   loop: 3,
+//   easing: 'easeInOutCirc',
+//   update: function(anim){
+// 	_(Math.round(anim.progress));
+// 	_(anim);
+//   }
+// })
+
+</script>
+</body>
+</html>

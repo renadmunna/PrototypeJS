@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title><script src="../src/dev.js"></script>
+	<script src="../dist/lib.js"></script>
+<style>
+.a,.b{
+position:absolute;
+left:0;top:0;
+width:100px;height:100px;
+background-color:tomato;
+}
+.b{top:100px;}
+</style>
+</head>
+<body>
+	<div class="a"></div>
+	<div class="b"></div>
+
+
+<!-- <script src="../src/fps.js"></script> -->
+<!-- <script src="../src/anime.min.js"></script> -->
+<script>
+var easingFunction ={
+		default: 'easeInQuad',
+		get:function(easing){
+				if(this[easing]){
+						return this[easing];
+				}
+				else{
+						return this[this.default];
+				}
+		},
+		linear:function(t, b, c, d){ return (c*t) / d + b; },
+		easeInQuad:function(t, b, c, d){ return c*(t /= d)*t + b; },
+		easeOutQuad:function(t, b, c, d){ return -c*(t /= d)*(t - 2) + b; },
+		easeInOutQuad:function(t, b, c, d){
+				return (t /= d / 2) < 1 ? (c / 2)*t*t + b : (-c / 2)*(--t*(t - 2) - 1) + b;
+		},
+		easeInCubic:function(t, b, c, d){ return c*(t /= d)*t*t + b; },
+		easeOutCubic:function(t, b, c, d){ return c*((t = t / d - 1)*t*t + 1) + b; },
+		easeInOutCubic:function(t, b, c, d){
+				return (t /= d / 2) < 1
+						? (c / 2)*t*t*t + b
+						: (c / 2)*((t -= 2)*t*t + 2) + b;
+		},
+		easeInQuart:function(t, b, c, d){ return c*(t /= d)*t*t*t + b; },
+		easeOutQuart:function(t, b, c, d){ return -c*((t = t / d - 1)*t*t*t - 1) + b; },
+		easeInOutQuart:function(t, b, c, d){
+				return (t /= d / 2) < 1
+						? (c / 2)*t*t*t*t + b
+						: (-c / 2)*((t -= 2)*t*t*t - 2) + b;
+		},
+		easeInQuint:function(t, b, c, d){ return c*(t /= d)*t*t*t*t + b; },
+		easeOutQuint:function(t, b, c, d){ return c*((t = t / d - 1)*t*t*t*t + 1) + b; },
+		easeInOutQuint:function(t, b, c, d){
+				return (t /= d / 2) < 1
+						? (c / 2)*t*t*t*t*t + b
+						: (c / 2)*((t -= 2)*t*t*t*t + 2) + b;
+		}
+};
+
+const easing1={
+	linear:function(t){return t},
+	easeInQuad:function(t){return t*t},
+	easeOutQuad:function(t){return -(Math.pow((t-1),2)-1)},
+	easeInOutQuad:function(t){
+		if((t/=0.5)<1){return 0.5*Math.pow(t,2)}
+		return -0.5*((t-=2)*t-2);
+	},
+	easeInCubic:function(t){return Math.pow(t,3)},
+	easeOutCubic:function(t){return (Math.pow((t-1), 3) +1)},
+	easeInOutCubic:function(t){
+		if((t/=0.5)<1){return 0.5*Math.pow(t,3)}
+		return 0.5*(Math.pow((t-2),3)+2);
+	},
+	easeInQuart:function(t){return Math.pow(t,4)},
+	easeOutQuart:function(t){return -(Math.pow((t-1),4)-1)},
+	easeInOutQuart:function(t){
+		if((t/=0.5)<1){return 0.5*Math.pow(t,4)}
+		return -0.5*((t-=2)*Math.pow(t,3)-2);
+	},
+	easeInQuint:function(t){return Math.pow(t, 5)},
+	easeOutQuint:function(t){return (Math.pow((t-1), 5) +1)},
+	easeInOutQuint:function(t){
+		if((t/=0.5) < 1) return 0.5*Math.pow(t,5);
+		return 0.5*(Math.pow((t-2),5) + 2);
+	},
+	easeInSine:function(t){return -Math.cos(t*(Math.PI/2)) + 1},
+	easeOutSine:function(t){return Math.sin(t*(Math.PI/2))},
+	easeInOutSine:function(t){return (-0.5*(Math.cos(Math.PI*t) -1))},
+	easeInExpo:function(t){return (t===0)?0:Math.pow(2,10*(t-1))},
+	easeOutExpo:function(t){return (t===1)?1:-Math.pow(2,-10*t)+1},
+	easeInOutExpo:function(t){
+		if(t===0){return 0}
+		if(t===1){return 1}
+		if((t/=0.5)<1){return 0.5*Math.pow(2,10*(t-1))}
+		return 0.5*(-Math.pow(2,-10*--t)+2);
+	},
+	easeInCirc:function(t){return -(Math.sqrt(1 - (t*t)) - 1)},
+	easeOutCirc:function(t){return Math.sqrt(1 - Math.pow((t-1), 2))},
+	easeInOutCirc:function(t){
+		if((t/=0.5) < 1) return -0.5*(Math.sqrt(1 - t*t) - 1);
+		return 0.5*(Math.sqrt(1 - (t-=2)*t) + 1);
+	},
+	easeOutBounce:function(t){
+		if((t) < (1/2.75)){
+		return (7.5625*t*t);
+		} else if(t < (2/2.75)){
+		return (7.5625*(t-=(1.5/2.75))*t + 0.75);
+		} else if(t < (2.5/2.75)){
+		return (7.5625*(t-=(2.25/2.75))*t + 0.9375);
+		} else{
+		return (7.5625*(t-=(2.625/2.75))*t + 0.984375);
+		}
+	},
+	easeInBack:function(t){
+		var s = 1.70158;
+		return (t)*t*((s+1)*t - s);
+	},
+	easeOutBack:function(t){
+		var s = 1.70158;
+		return (t=t-1)*t*((s+1)*t + s) + 1;
+	},
+	easeInOutBack:function(t){
+		var s = 1.70158;
+		if((t/=0.5) < 1) return 0.5*(t*t*(((s*=(1.525))+1)*t -s));
+		return 0.5*((t-=2)*t*(((s*=(1.525))+1)*t +s) +2);
+	},
+	elastic:function(t){
+		return -1*Math.pow(4,-8*t)*Math.sin((t*6-1)*(2*Math.PI)/2) + 1;
+	},
+	swingFromTo:function(t){
+		var s = 1.70158;
+		return ((t/=0.5) < 1) ? 0.5*(t*t*(((s*=(1.525))+1)*t - s)) :
+		0.5*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2);
+	},
+	swingFrom:function(t){
+		var s = 1.70158;
+		return t*t*((s+1)*t - s);
+	},
+	swingTo:function(t){
+		var s = 1.70158;
+		return (t-=1)*t*((s+1)*t + s) + 1;
+	},
+	bounce:function(t){
+		if(t < (1/2.75)){
+		return (7.5625*t*t);
+		} else if(t < (2/2.75)){
+		return (7.5625*(t-=(1.5/2.75))*t + 0.75);
+		} else if(t < (2.5/2.75)){
+		return (7.5625*(t-=(2.25/2.75))*t + 0.9375);
+		} else{
+		return (7.5625*(t-=(2.625/2.75))*t + 0.984375);
+		}
+	},
+	bouncePast:function(t){
+		if(t<(1/2.75)){return (7.5625*t*t)} 
+		else if(t<(2/2.75)){return 2-(7.5625*(t-=(1.5/2.75))*t+0.75)} 
+		else if(t<(2.5/2.75)){return 2-(7.5625*(t-=(2.25/2.75))*t+0.9375)} 
+		else{return 2-(7.5625*(t-=(2.625/2.75))*t + 0.984375)}
+	},
+	easeFromTo:function(t){
+		if((t/=0.5)<1){return 0.5*Math.pow(t,4)}
+		return -0.5*((t-=2)*Math.pow(t,3)-2);
+	},
+	easeFrom:function(t){return Math.pow(t,4)},
+	easeTo:function(t){return Math.pow(t,0.25)}
+};
+
+const easing={
+	linear:function(n){return n},
+	easeInQuad:function(n){return n*n},
+	easeOutQuad:function(n){return n*(2 - n)},
+	easeInOutQuad:function(n){
+		n *= 2;
+		if (n < 1) return 0.5*n*n;
+		return - 0.5*(--n*(n - 2) - 1);
+	},
+	easeInCubic:function(n){return n*n*n},
+	easeOutCubic:function(n){return --n*n*n + 1},
+	easeInOutCubic:function(n){
+		n *= 2;
+		if (n < 1) return 0.5*n*n*n;
+		return 0.5*((n -= 2 )*n*n + 2);
+	},
+	easeInQuart:function(n){return n*n*n*n},
+	easeOutQuart:function(n){return 1 - (--n*n*n*n)},
+	easeInOutQuart:function(n){
+		n *= 2;
+		if (n < 1) return 0.5*n*n*n*n;
+		return -0.5*((n -= 2)*n*n*n - 2);
+	},
+	easeInQuint:function(n){return n*n*n*n*n},
+	easeOutQuint:function(n){return --n*n*n*n*n + 1},
+	easeInOutQuint:function(n){
+		n *= 2;
+		if (n < 1) return 0.5*n*n*n*n*n;
+		return 0.5*((n -= 2)*n*n*n*n + 2);
+	},
+	easeInSine:function(n){return 1 - Math.cos(n*Math.PI / 2 )},
+	easeOutSine:function(n){return Math.sin(n*Math.PI / 2)},
+	easeInOutSine:function(n){return .5*(1 - Math.cos(Math.PI*n))},
+	easeInExpo:function(n){return 0 == n ? 0 : Math.pow(1024, n - 1)},
+	easeOutExpo:function(n){return 1 == n ? n : 1 - Math.pow(2, -10*n)},
+	easeInOutExpo:function(n){
+		if (0 == n) return 0;
+		if (1 == n) return 1;
+		if ((n *= 2) < 1) return .5*Math.pow(1024, n - 1);
+		return .5*(-Math.pow(2, -10*(n - 1)) + 2);
+	},
+	easeInCirc:function(n){return 1 - Math.sqrt(1 - n*n)},
+	easeOutCirc:function(n){return Math.sqrt(1 - (--n*n))},
+	easeInOutCirc:function(n){
+		n *= 2
+		if (n < 1) return -0.5*(Math.sqrt(1 - n*n) - 1);
+		return 0.5*(Math.sqrt(1 - (n -= 2)*n) + 1);
+	},
+	easeInBack:function(n){
+		var s = 1.70158;
+		return n*n*(( s + 1 )*n - s);
+	},
+	easeOutBack:function(n){
+		var s = 1.70158;
+		return --n*n*((s + 1)*n + s) + 1;
+	},
+	easeInOutBack:function(n){
+		var s = 1.70158*1.525;
+		if ( ( n *= 2 ) < 1 ) return 0.5*( n*n*( ( s + 1 )*n - s ) );
+		return 0.5*( ( n -= 2 )*n*( ( s + 1 )*n + s ) + 2 );
+	},
+	easeInBounce:function(n){return 1 - easeOutBounce(1 - n)},
+	easeOutBounce:function(n){
+		if ( n < ( 1 / 2.75 ) ) {
+			return 7.5625*n*n;
+		} else if ( n < ( 2 / 2.75 ) ) {
+			return 7.5625*( n -= ( 1.5 / 2.75 ) )*n + 0.75;
+		} else if ( n < ( 2.5 / 2.75 ) ) {
+			return 7.5625*( n -= ( 2.25 / 2.75 ) )*n + 0.9375;
+		} else {
+			return 7.5625*( n -= ( 2.625 / 2.75 ) )*n + 0.984375;
+		}
+	},
+	easeInOutBounce:function(n){
+		if (n < .5) return inBounce(n*2)*.5;
+		return outBounce(n*2 - 1)*.5 + .5;
+	},
+	easeInElastic:function(n){
+		var s, a = 0.1, p = 0.4;
+		if ( n === 0 ) return 0;
+		if ( n === 1 ) return 1;
+		if ( !a || a < 1 ) { a = 1; s = p / 4; }
+		else s = p*Math.asin( 1 / a ) / ( 2*Math.PI );
+		return - ( a*Math.pow( 2, 10*( n -= 1 ) )*Math.sin( ( n - s )*( 2*Math.PI ) / p ) );
+	},
+	easeOutElastic:function(n){
+		var s, a = 0.1, p = 0.4;
+		if ( n === 0 ) return 0;
+		if ( n === 1 ) return 1;
+		if ( !a || a < 1 ) { a = 1; s = p / 4; }
+		else s = p*Math.asin( 1 / a ) / ( 2*Math.PI );
+		return ( a*Math.pow( 2, - 10*n)*Math.sin( ( n - s )*( 2*Math.PI ) / p ) + 1 );
+	},
+	easeInOutElastic:function(n){
+		var s, a = 0.1, p = 0.4;
+		if ( n === 0 ) return 0;
+		if ( n === 1 ) return 1;
+		if ( !a || a < 1 ) { a = 1; s = p / 4; }
+		else s = p*Math.asin( 1 / a ) / ( 2*Math.PI );
+		if ( ( n *= 2 ) < 1 ) return - 0.5*( a*Math.pow( 2, 10*( n -= 1 ) )*Math.sin( ( n - s )*( 2*Math.PI ) / p ) );
+		return a*Math.pow( 2, -10*( n -= 1 ) )*Math.sin( ( n - s )*( 2*Math.PI ) / p )*0.5 + 1;
+	}
+};
+
+const fps=function(task){
+	task.from=task.range[0];
+	task.to=task.range[1];
+	if(task.from<task.to){task.range=task.to-task.from;task.vector=1}
+	else{task.range=task.from-task.to;task.vector=-1}
+	task.start=fps.start;
+	task.stop=fps.stop;
+	task.process=function(now){
+		if(!this.current){this.callback('start');this.current=now}
+		const elapsed=now-this.current;
+		var progress=elapsed/this.duration;
+		result=this.easing&&easing[this.easing]&&easing[this.easing](progress)||easing['linear'](progress);
+		// if(task.easing){
+		// 	progress=easing[task.easing](progress);
+		// }
+		_(easing[this.easing](progress)-easing1[this.easing](progress));
+		result=task.range*Math.min(result,1);
+		// result=easingFunction[task.easing](run, task.from*task.m, task.range, task.duration);
+
+		// result=task.from+(result*task.m);
+		this.update(result);
+		// _(elapsed,this.duration,elapsed<this.duration);
+		if(elapsed<this.duration){return true;}
+		this.callback('stop');
+		if(this.done){this.done()}
+		return false;
+	};
+	task.loop=function(now,task){
+		task.ref=requestAnimationFrame(task.loop.args(task));
+		if(!task.process(now)){task.stop()}
+		
+	};
+	return task;
+};
+fps.add=function(){
+	arguments.each(function(task){fps.task.push(fps(task))})
+	return this;
+};
+fps.task=[];
+fps.loop=function(now,that){
+	that.task.each(function(task,index,arr){
+		if(!task.process(now)){arr.splice(index,1)}
+	});
+	if(that.task.length==0 && that.done){that.done()}
+	that.ref=requestAnimationFrame(that.loop.args(that));
+};
+fps.start=function(){this.ref=requestAnimationFrame(this.loop.args(this));return this};
+fps.stop=function(){cancelAnimationFrame(this.ref);return this};
+
+fps.timeline=function(){
+	arguments.each(function(task){fps.timeline.task.push(fps(task))});
+	return this;
+};
+fps.timeline.task=[];
+fps.timeline.loop=fps.loop;
+fps.timeline.start=fps.start;
+fps.timeline.stop=fps.stop;
+fps.timeline.done=function(){this.stop()};
+
+
+a=$('.a');
+b=$('.b');
+
+// ref1=fps({duration:1000,range:[0,150],delay:1000,easing:'linear',
+// 	once:function(val){
+// 		a.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)}
+// });
+// ref2=fps({duration:2000,range:[0,300],delay:1000,easing:'bounceOut',
+// 	once:function(val){
+// 		b.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)}
+// });
+// setTimeout(function(){ref2.stop()}, 1000);
+// setTimeout(function(){ref2.play()}, 2000);
+
+// ref1=fps({duration:1000,range:[0,150],delay:1000,easing:'easeInQuint',
+// 	add:function(val){
+// 		a.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){
+// 		_(status);
+// 		if(!status)
+// 		fps.stop();
+// 	}
+// });
+// ref2=fps({duration:2000,range:[300,0],delay:1000,easing:'easeInQuint',
+// 	add:function(val){
+// 		b.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)}
+// });
+
+ref1=fps({duration:1000,range:[0,150],delay:1000,easing:'easeOutQuad',
+	update:function(val){
+		a.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)},
+	done:function(){_('done')}
+}).start();
+ref2=fps({duration:1000,range:[300,150],delay:1000,easing:'easeOutQuad',
+	update:function(val){
+		b.style.transform=`translateX(${val}px)`;
+	},
+	callback:function(status){_(status)},
+	done:function(){_('done')}
+});
+
+// fps.add({duration:1000,range:[0,150],delay:1000,easing:'easeInQuint',
+// 	update:function(val){
+// 		a.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)},
+//   done:function(){_('done')}
+// },{duration:1000,range:[300,150],delay:1000,easing:'easeInQuint',
+// 	update:function(val){
+// 		b.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)},
+//   done:function(){_('done')}
+// });
+
+// // fps.start();
+// // fps.stop();
+
+// fps.timeline({duration:1000,range:[0,150],delay:1000,easing:'easeInQuint',
+// 	update:function(val){
+// 		a.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)},
+//   done:function(){_('done')}
+// },{duration:1000,range:[300,150],delay:1000,easing:'easeInQuint',
+// 	update:function(val){
+// 		b.style.transform=`translateX(${val}px)`;
+// 	},
+// 	callback:function(status){_(status)},
+//   done:function(){_('done')}
+// });
+// // .timeline({duration:3000,range:[300,150],delay:1000,easing:'easeInQuint',
+// // 	update:function(val){
+// // 		b.style.transform=`translateX(${val}px)`;
+// // 	},
+// // 	callback:function(status){_(status)},
+// //   done:function(){_('done')}
+// // });
+
+// // fps.timeline.start();
+// // fps.timeline.stop();
+
+// // _(fps.task,fps.timeline.task);
+
+</script>
+</body>
+</html>

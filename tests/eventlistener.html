@@ -5,6 +5,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>LibJS</title><script src="../src/dev.js"></script>
 	<script src="../dist/lib.js"></script>
+<style>
+html,body{
+	margin:0;
+	width:100%;height:100%;
+}
+</style>
 </head>
 <body>
 	<div id="a">renad</div>
@@ -31,6 +37,14 @@
 // 	_('original:',this,e,a,b)
 // },'renad','munna'));
 
+EventTarget.prototype.on=function(){this.addEventListener.apply(this,arguments);return this};
+
+
+$('body').on('pointerdown',function(e){
+	_(e.clientX,e.clientY);
+}).on('pointerup',function(e){
+	_(e.clientX,e.clientY);
+});
 
 
 $('#a').on('click',function(e){
