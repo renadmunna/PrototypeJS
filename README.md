@@ -21,3 +21,13 @@ Javascript helper library
 ```html
 <script src="https://raw.githubusercontent.com/renadmunna/PrototypeJS/main/dist/lib.js"></script>
 ```
+## Example
+#### select element
+```javascript
+//select element
+var $element = $('selector');
+var $element_list = $$('selector');
+//select element inside child
+var $child = $element.$('selector');
+var $child_list = $element.$$('selector');
+```
