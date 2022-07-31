@@ -17,8 +17,6 @@ Javascript helper library
 - [License](#license)
 
 ## Installation
-Download or clone repository and copy the dist folder, CDN option Or npm.
-
 #### LOCAL
 ```html
 <script src="https://raw.githubusercontent.com/renadmunna/PrototypeJS/main/dist/lib.js"></script>
