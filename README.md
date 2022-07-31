@@ -5,4 +5,21 @@
 # LibJS
 Javascript helper library
 
-[DEMOs](https://github.com/renadmunna/PrototypeJS/tree/test)
+[Demos](https://github.com/renadmunna/PrototypeJS/tree/test)
+
+## Table of contents
+- [Features](#features)
+- [Installation](#installation)
+  - [Running](#running)
+- [Export / Import](#export-/-import)
+  - [Export example](#export-example)
+- [Example](#example)
+- [License](#license)
+
+## Installation
+Download or clone repository and copy the dist folder, CDN option Or npm.
+
+#### LOCAL
+```html
+<script src="https://raw.githubusercontent.com/renadmunna/PrototypeJS/main/dist/lib.js"></script>
+```
