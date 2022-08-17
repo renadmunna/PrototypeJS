@@ -1,6 +1,7 @@
-var doc=document;
-var $=document.querySelector.bind(document);
-var $$=document.querySelectorAll.bind(document);
+const doc=document;
+const body=document.body;
+const $=document.querySelector.bind(document);
+const $$=document.querySelectorAll.bind(document);
 Element.prototype.$=Element.prototype.querySelector;
 Element.prototype.$$=Element.prototype.querySelectorAll;
 function isFN(fn){return typeof fn=='function'}
@@ -90,6 +91,8 @@ Element.prototype.css=function(prop,val){
 	if(val){this.style.setProperty(prop,val)}
 	else{prop.each(function(val,prop){this.style.setProperty(prop,val)},this);}
 };
+// String
+String.prototype['?']=function(sub){return this.indexOf(sub)!==-1};
 // Template
 String.prototype.render=function(data){return this.replace(/\${(.*?)}/g,function(x,g){
 	return g.split(/[\.\[\]\'\"]/g).filter(Boolean).reduce(function(obj,i){return obj[i]},data)

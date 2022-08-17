@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title><script src="../src/dev.js"></script>
+	<script src="../prototype.js"></script>
+</head>
+<body>
+	<div class="a">renadmunna</div>
+	<div class="a">renadmunna</div>
+<script>
+	_($$('.a'));
+	$$('.a').each(function(item,index,arr){_(item,index,arr);})
+</script>
+</body>
+</html>
