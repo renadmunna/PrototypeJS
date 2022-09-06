@@ -35,16 +35,17 @@ obj={a:'renad',b:'munna',c:'ali',d:'mohsin'};
 // 	_(key,value,obj,this);
 // },$('button'));
 
-Object.listener(obj);
-obj.on('test',function(e){
-_(e,arguments);
-}.args('ali'));
-obj.trigger('test',{renad:'munna'});
-_(obj.events);
-
-
-obj1={a:'renad',b:'munna',c:'ali',d:'mohsin',e:function(){return 'ami'},f:function(){return this.e()}};
-_(obj1.f());
+obj1={a:'renad'};
+obj2={b:'munna'};
+Object.listener(obj1);
+Object.listener(obj2);
+obj1.on('test',function(e){
+	_('ali');
+});
+obj2.on('test',function(e){
+	_('mohsin');
+});
+obj2.trigger('test');
 </script>
 </body>
 </html>

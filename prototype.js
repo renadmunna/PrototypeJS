@@ -5,8 +5,6 @@ const $$=document.querySelectorAll.bind(document);
 Element.prototype.$=Element.prototype.querySelector;
 Element.prototype.$$=Element.prototype.querySelectorAll;
 function isFN(fn){return typeof fn=='function'}
-// Object
-Object.proto=Object.getPrototypeOf;
 // Each Loop
 NodeList.prototype.each=NodeList.prototype.forEach;
 Array.prototype.each=Array.prototype.forEach;
@@ -28,11 +26,10 @@ EventTarget.prototype.off = EventTarget.prototype.removeEventListener;
 EventTarget.prototype.trigger = function(name,detail){
 	this.dispatchEvent(new CustomEvent(name,{detail:detail}));
 };
-Object.listener=function(obj){
-	var proto=Object.proto(obj);proto.events={};
-	proto.on=function(e,fn){if(!this.events[e]){this.events[e]=[]}this.events[e].push(fn)};
-	proto.trigger=function(e,data){if(!this.events[e]){return}
-		this.events[e].each(function(fn){if(!isFN(fn)){return}fn.call(this,data)},this);
+Object.listener=function(obj){obj._events={};
+	obj.on=function(e,fn){if(!this._events[e]){this._events[e]=[]}this._events[e].push(fn)};
+	obj.trigger=function(e,data){if(!this._events[e]){return}
+		this._events[e].each(function(fn){if(!isFN(fn)){return}fn.call(this,data)},this);
 	};
 };
 // delegate event
