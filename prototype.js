@@ -8,11 +8,11 @@ function isFN(fn){return typeof fn=='function'}
 // Each Loop
 NodeList.prototype.each=NodeList.prototype.forEach;
 Array.prototype.each=Array.prototype.forEach;
-Object.prototype.each=function(fn,that){if(!isFN(fn)){return}
+HTMLCollection.prototype.each=function(fn,that){if(!isFN(fn)){return}
 	if(that){Object.keys(this).each(function(key){fn.call(that,this[key],key,this)},this)}
 	else{Object.keys(this).each(function(key){fn(this[key],key,this)},this)}
 };
-HTMLCollection.prototype.each=Object.prototype.each;
+Object.prototype.each=HTMLCollection.prototype.each;
 // Function
 Function.prototype.args=function(){var fn=this,pass=[].slice.call(arguments);
 	return function(){var args=[].slice.call(arguments).concat(pass);fn.apply(this,args)};

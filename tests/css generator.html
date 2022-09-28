@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LibJS</title><script src="../src/dev.js"></script>
+	<script src="../prototype.js"></script>
+</head>
+<body>
+<pre></pre>
+<script>
+html='/*gap css start*/\n';
+for(var i=1;i<=100;i++){
+	if(i%5==0){html+=`[gap="${i}vw"]{gap:${i}vw;}\n`}
+	else{html+=`[gap="${i}vw"]{gap:${i}vw;}`}
+}
+html+='/*gap css end*/';
+$('pre').html=html;
+html='/*gap css start*/\n';
+for(var i=1;i<=100;i++){
+	for(var j=1;j<=9;j++){
+		if(i%1==0&&j==1){html+=`\n[gap="${i}.${j}vw"]{gap:${i}.${j}vw;}`}
+		else{html+=`[gap="${i}.${j}vw"]{gap:${i}.${j}vw;}`}
+	}
+}
+html+='/*gap css end*/';
+$('pre').html+=html;
+
+</script>
+</body>
+</html>
